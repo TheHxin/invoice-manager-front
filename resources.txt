@@ -1,0 +1,5 @@
+https://ui.shadcn.com/docs/components -> shadcn ui reusabel components official docs [has example codes of the component and their source + how to install them]
+
+_____________________________________________________________________________________________________________________________________________________________________________
+
+https://axios-http.com/docs/req_config -> axios offical docs [i used to find how to configure request headers]
