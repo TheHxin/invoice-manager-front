@@ -3,3 +3,11 @@ https://ui.shadcn.com/docs/components -> shadcn ui reusabel components official 
 _____________________________________________________________________________________________________________________________________________________________________________
 
 https://axios-http.com/docs/req_config -> axios offical docs [i used to find how to configure request headers]
+
+_____________________________________________________________________________________________________________________________________________________________________________
+
+https://www.radix-ui.com/primitives/docs/components/alert-dialog -> setting up a dialog box [radix docs]
+
+_____________________________________________________________________________________________________________________________________________________________________________
+
+https://react.dev/reference/react/useRef -> to store the jwt token and the intervalid 

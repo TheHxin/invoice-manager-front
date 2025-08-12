@@ -1,0 +1,23 @@
+commit 62120e376ecd3ce4f8c8fcb7d11dfe8315599d67
+Author: deb <hxin.radin@gmail.com>
+Date:   Mon Aug 4 13:21:03 2025 +0200
+
+    Added fetching invoice logic
+
+commit ec148ac04e0253e56e824a747eee678045ed12b5
+Author: deb <hxin.radin@gmail.com>
+Date:   Sat Aug 2 11:42:33 2025 +0200
+
+    Updated .gitignore
+
+commit 5329776fbfb4b56e88d0ccdaa36390e1f29fe8bb
+Author: deb <hxin.radin@gmail.com>
+Date:   Sat Aug 2 11:41:40 2025 +0200
+
+    Added login page
+
+commit 4a9e8b50fd4abfbb4127127eeb91fcaad510b8c2
+Author: deb <hxin.radin@gmail.com>
+Date:   Fri Aug 1 22:55:57 2025 +0200
+
+    Initial commit from Create Next App
