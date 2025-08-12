@@ -17,8 +17,7 @@ import {
   AlertDialogDescription,
   AlertDialogFooter,
   AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
+  AlertDialogTitle
 } from "@/components/ui/alert-dialog";
 
 import axios from "axios";
@@ -66,6 +65,7 @@ export default function Home() {
   };
 
   useEffect(() => {
+    fetchInvoices();
     const intervalId = setInterval(fetchInvoices,5000);
     intervalRef.current = intervalId;
 
@@ -76,7 +76,6 @@ export default function Home() {
     <div>
       <div>
         <AlertDialog open={alertOpen}>
-          <AlertDialogTrigger>Open</AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Authorization Error</AlertDialogTitle>
@@ -87,7 +86,7 @@ export default function Home() {
             <AlertDialogFooter>
               <AlertDialogAction
                 onClick={() => {
-                  router.push(new URL("/login", window.location.origin).toString());
+                  router.push(new URL("/login", SETTINGS.HOST).toString());
                 }}
               >
                 Go To Login

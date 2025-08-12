@@ -9,15 +9,24 @@ import { Button } from "@/components/ui/button"; //@ is an alias for the project
 // to be able to access a function outside the js, ts or tsx file you need to "export" it -> like public in java or C#
 
 import { useState } from "react";
+import { SETTINGS } from "@/lib/settings";
+import { useRouter } from "next/navigation";
+import isAuthed from "@/lib/check-auth";
 
 export default function Login() {
 
   const [username , setUsername] = useState("");
   const [password , setPassword] = useState("");
 
+  const router = useRouter();
+
+  if (isAuthed()){
+    router.push(new URL("/",SETTINGS.HOST).toString());
+  }
+
   const auth = (username: string, password: string) => {
     axios
-      .post("http://localhost:38532/token_json", {
+      .post(new URL("/login_json",SETTINGS.API_URL).toString(), {
         username: username,
         password: password,
       })
@@ -25,6 +34,8 @@ export default function Login() {
         console.log(res.data.access_token);
 
         localStorage.setItem("token", res.data.access_token);
+        router.push(new URL("/",SETTINGS.HOST).toString());
+        
       })
       .catch((err) => {
         console.log("got fucking error omg", err);
