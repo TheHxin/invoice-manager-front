@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button"; //@ is an alias for the project
 import { useState } from "react";
 import { SETTINGS } from "@/lib/settings";
 import { useRouter } from "next/navigation";
-import isAuthed from "@/lib/check-auth";
+import isAuthed from "@/lib/auth";
 
 export default function Login() {
 

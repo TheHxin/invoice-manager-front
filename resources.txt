@@ -11,3 +11,7 @@ https://www.radix-ui.com/primitives/docs/components/alert-dialog -> setting up a
 _____________________________________________________________________________________________________________________________________________________________________________
 
 https://react.dev/reference/react/useRef -> to store the jwt token and the intervalid 
+
+_____________________________________________________________________________________________________________________________________________________________________________
+
+https://react.dev/learn/passing-data-deeply-with-context -> to make the auth xcontet and provider to save the token in the memory instead of the localstorage fro bvettter security. 

@@ -37,6 +37,7 @@ interface Invoice {
 import { SETTINGS } from "@/lib/settings";
 
 export default function Home() {
+
   const intervalRef = useRef(setTimeout(() => {}, 1000)); //wow this is ass tbh i hate ts -> to set the value i had to call a function and pass it an anonymous function so efficient
 
   const [invoices, setInvoices] = useState<Invoice[]>([]);
