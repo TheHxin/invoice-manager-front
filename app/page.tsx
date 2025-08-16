@@ -3,22 +3,11 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle
-} from "@/components/ui/alert-dialog";
 
 import axios from "axios";
 import { useRef, useState } from "react";
@@ -35,73 +24,52 @@ interface Invoice {
 }
 
 import { SETTINGS } from "@/lib/settings";
+import useAuth from "./auth-context";
 
 export default function Home() {
-
   const intervalRef = useRef(setTimeout(() => {}, 1000)); //wow this is ass tbh i hate ts -> to set the value i had to call a function and pass it an anonymous function so efficient
 
+  const [selectedRow, setSelectedRow] = useState<number>(0);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
-  const [alertOpen, setAlertOpen] = useState(false);
   const router = useRouter();
+  const authenticator = useAuth();
 
   const fetchInvoices = async () => {
     axios
-      .get(new URL("/invoices",SETTINGS.API_URL).toString(), {
+      .get(new URL("/invoices", SETTINGS.API_URL).toString(), {
         headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
+          Authorization: "Bearer " + authenticator?.getToken(),
         },
       })
       .then((res) => {
         setInvoices(res.data);
       })
       .catch((e) => {
-        console.log("fuck bruv we got errs: ");
         console.log(e);
-        if (e.status == 401){
-          clearInterval(intervalRef.current);
-          setAlertOpen(true);
+        if (e.status == 401) {
+          //console.log(intervalRef.current, "cleared")
+          //clearInterval(intervalRef.current);
+          console.log("Not authed, routing ...");
+          router.push(new URL("/login", SETTINGS.HOST).toString());
         }
-
       });
   };
 
   useEffect(() => {
-    fetchInvoices();
-    const intervalId = setInterval(fetchInvoices,5000);
-    intervalRef.current = intervalId;
+    intervalRef.current = setInterval(fetchInvoices, 2000);
 
-    return () => {clearInterval(intervalId)}
-  } , [])
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }); // note: no need for dependency array if not used.
 
   return (
     <div>
-      <div>
-        <AlertDialog open={alertOpen}>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Authorization Error</AlertDialogTitle>
-              <AlertDialogDescription>
-                You are not logged in.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogAction
-                onClick={() => {
-                  router.push(new URL("/login", SETTINGS.HOST).toString());
-                }}
-              >
-                Go To Login
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-      </div>
       <div className="w-full max-w-5xl mx-auto p-4">
         <div className="overflow-x-auto rounded-md border">
           <Table>
-            <TableCaption>Invoices</TableCaption>
             <TableHeader>
-              <TableRow>
+              <TableRow className="bg-gray-200 hover:bg-gray-200">
                 <TableHead className="w-[100px]">InvoiceID</TableHead>
                 <TableHead className="text-center">Origin</TableHead>
                 <TableHead className="text-center">Destination</TableHead>
@@ -112,7 +80,11 @@ export default function Home() {
             </TableHeader>
             <TableBody>
               {invoices.map((invoice) => (
-                <TableRow key={invoice.id}>
+                <TableRow
+                  key={invoice.id}
+                  className={selectedRow === invoice.id ? "bg-blue-400 hover:bg-blue-400" : ""}
+                  onClick={() => {setSelectedRow(invoice.id)}}
+                >
                   <TableCell className="text-center">{invoice.id}</TableCell>
                   <TableCell className="text-center">
                     {invoice.origin}

@@ -1,7 +1,6 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { isAuthed } from "@/lib/check-auth";
 
 import {
   AlertDialog,

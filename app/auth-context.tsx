@@ -1,3 +1,5 @@
+"use client";
+
 import {
   createContext,
   Dispatch,
@@ -9,7 +11,6 @@ import {
 } from "react";
 import axios from "axios";
 import { SETTINGS } from "@/lib/settings";
-import { User } from "lucide-react";
 
 interface User {
   username: string;
@@ -22,7 +23,7 @@ interface AuthContextInterface {
   getToken: () => string;
   setToken: (token: string) => string;
   setUser: Dispatch<SetStateAction<User | undefined>>;
-  isAuthed: () => boolean;
+  isAuthed: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextInterface | null>(null);
@@ -31,24 +32,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const tokenRef = useRef("");
   const [user, setUser] = useState<User>();
 
-  function isAuthed(): boolean {
-    let res = true;
-
-    axios
+  async function isAuthed() {
+    let resault = true;
+    await axios
       .get(new URL("/me", SETTINGS.API_URL).toString(), {
         headers: {
-          Authorization: "Bearer " + localStorage.getItem("token"),
+          Authorization: "Bearer " + tokenRef.current,
         },
       })
       .catch((e) => {
-        if (e.status == 401) {
-          res = false;
-        } else {
-          console.log(e);
+        if (e.status === 401) {
+          resault = false;
+          //return false; //note : this return will return from the anonymous function that we passed to catch
         }
       });
-
-    return res;
+    return resault;
   }
 
   function getToken() {
