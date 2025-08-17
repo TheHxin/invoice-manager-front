@@ -15,7 +15,8 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from "@/components/ui/input";
 
-interface InvoiceBase { //note: the "origin_name" and "destination_name" are temp for development. 
+interface InvoiceBase {
+  //note: the "origin_name" and "destination_name" are temp for development.
   issued: string | undefined;
   due: string | undefined;
   amount: number | undefined;
@@ -26,7 +27,8 @@ interface InvoiceCreate extends InvoiceBase {
   destination_name: string | undefined;
 }
 
-interface InvoiceAPI { //this interface must match the json format that the api sends.
+interface InvoiceAPI {
+  //this interface must match the json format that the api sends.
   id: number;
   origin: string;
   destination: string;
@@ -57,7 +59,8 @@ export default function Home() {
     amount: 0,
   };
 
-  const [invoiceCreate, setInvoiceCreate] = useState<InvoiceCreate>(initInvoiceCreateObj);
+  const [invoiceCreate, setInvoiceCreate] =
+    useState<InvoiceCreate>(initInvoiceCreateObj);
   const [selectedRow, setSelectedRow] = useState<number>(0);
   const [invoices, setInvoices] = useState<InvoiceAPI[]>([]);
   const router = useRouter();
@@ -103,13 +106,23 @@ export default function Home() {
     );
   };
 
-  function handleCreateInvoiceChange(update: Partial<InvoiceCreate> = {}) { //this function uses the ... spread oprator to first put the previous values thenoverride them with the given ones in the update partial.
-  setInvoiceCreate(prev => ({ //when instead of a value you pass a function to the setfunction of the useState hook react will call that function and pass the current values of the variable saved as a state
-    ...prev,   // first put the previous values
-    ...update, // then override only the ones in update
-  }));
-}
+  const deleteInvoice = (id: number) => {
+    axios.delete(new URL(`/invoice/${id}`, SETTINGS.API_URL).toString(), {
+      //note: to insert var into text you must use `` not ""
+      headers: {
+        Authorization: "Bearer " + authenticator?.getToken(),
+      },
+    });
+  };
 
+  function handleCreateInvoiceChange(update: Partial<InvoiceCreate> = {}) {
+    //this function uses the ... spread oprator to first put the previous values thenoverride them with the given ones in the update partial.
+    setInvoiceCreate((prev) => ({
+      //when instead of a value you pass a function to the setfunction of the useState hook react will call that function and pass the current values of the variable saved as a state
+      ...prev, // first put the previous values
+      ...update, // then override only the ones in update
+    }));
+  }
 
   useEffect(() => {
     intervalRef.current = setInterval(fetchInvoices, 2000);
@@ -140,7 +153,13 @@ export default function Home() {
                   <TableBody>
                     <TableRow>
                       <TableCell className="text-center">
-                        <Button onClick={() => {postInvoice(invoiceCreate)}}>Add</Button>
+                        <Button
+                          onClick={() => {
+                            postInvoice(invoiceCreate);
+                          }}
+                        >
+                          Add
+                        </Button>
                       </TableCell>
                       <TableCell className="text-center">
                         <Input
@@ -148,7 +167,8 @@ export default function Home() {
                           placeholder="origin"
                           className="text-center"
                           onChange={(e) => {
-                            handleCreateInvoiceChange({ //pass the changed value to change handler function that handles partials becaue each input passes only one of the parameters.
+                            handleCreateInvoiceChange({
+                              //pass the changed value to change handler function that handles partials becaue each input passes only one of the parameters.
                               origin_name: e.target.value,
                             });
                           }}
@@ -248,9 +268,32 @@ export default function Home() {
         <ContextMenuContent hideWhenDetached>
           {selectedRow ? (
             <div>
-              <ContextMenuItem>Copy</ContextMenuItem>
+              <ContextMenuItem
+                onClick={() => { 
+                  navigator.clipboard.writeText(
+                    ((): string => {
+                      let res: string = ""; //note: in ts the let type of var does not need to be assigned here but because ts doesnt know that our loop and if will 100 percent of the time set the res it will yeild an error so we set it here to silent the error
+                      invoices.forEach((element) => {
+                        if (element.id === selectedRow) {
+                          res = JSON.stringify(element, null, 2);
+                        }
+                      });
+                      return res;
+                    })()
+                  );
+                }}
+              >
+                Copy
+              </ContextMenuItem>
               <ContextMenuItem>Edit</ContextMenuItem>
-              <ContextMenuItem variant="destructive">Delete</ContextMenuItem>
+              <ContextMenuItem
+                variant="destructive"
+                onClick={() => {
+                  deleteInvoice(selectedRow);
+                }}
+              >
+                Delete
+              </ContextMenuItem>
             </div>
           ) : (
             <ContextMenuItem disabled>no item selected</ContextMenuItem>
