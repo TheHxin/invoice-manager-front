@@ -120,3 +120,15 @@
     @apply bg-background text-foreground;
   }
 }
+
+/* disable the up and down arrow in number input field*/
+.input-no-spinners::-webkit-inner-spin-button,
+.input-no-spinners::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.input-no-spinners {
+  -moz-appearance: textfield;
+}
+

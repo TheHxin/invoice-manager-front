@@ -3,6 +3,7 @@
 import {
   Table,
   TableBody,
+  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -23,6 +24,13 @@ interface Invoice {
   due: string;
   amount: number;
 }
+interface InvoiceCreate {
+  origin_name: string;
+  destination_name: string;
+  issued: string;
+  due: string;
+  amount: number;
+}
 
 import { SETTINGS } from "@/lib/settings";
 import useAuth from "./auth-context";
@@ -32,10 +40,12 @@ import {
   ContextMenuItem,
   ContextMenuTrigger,
 } from "@/components/ui/context-menu";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const intervalRef = useRef(setTimeout(() => {}, 1000)); //wow this is ass tbh i hate ts -> to set the value i had to call a function and pass it an anonymous function so efficient
 
+  const [newInvoice, setNewInvoice] = useState<Invoice | null>(null);
   const [selectedRow, setSelectedRow] = useState<number>(0);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const router = useRouter();
@@ -60,6 +70,25 @@ export default function Home() {
           router.push(new URL("/login", SETTINGS.HOST).toString());
         }
       });
+  };
+
+  const postInvoice = async (invoice: InvoiceCreate) => {
+    axios.post(
+      new URL("/invoice_acname", SETTINGS.API_URL).toString(),
+      {
+        origin_name : invoice.origin_name,
+        destination_name : invoice.destination_name,
+        issued : invoice.issued,
+        due : invoice.due,
+        amount : invoice.amount
+      },
+      {
+        headers: {
+          Authorization: "Bearer " + authenticator?.getToken(),
+          "Content-Type" : "application/json"
+        },
+      }
+    );
   };
 
   useEffect(() => {
@@ -90,29 +119,29 @@ export default function Home() {
                   </TableHeader>
                   <TableBody>
                     <TableRow>
-                      <TableCell>
-                        <Input type="number" placeholder="id" />
+                      <TableCell className="text-center">
+                        <Button>Add</Button>
                       </TableCell>
-                      <TableCell>
-                        <Input type="text" placeholder="origin" />
+                      <TableCell className="text-center">
+                        <Input type="text" placeholder="origin" className="text-center" />
                       </TableCell>
-                      <TableCell>
-                        <Input type="text" placeholder="destination" />
+                      <TableCell className="text-center">
+                        <Input type="text" placeholder="destination" className="text-center" />
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="text-center">
                         <Input type="date" placeholder="issued" />
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="text-center">
                         <Input type="date" placeholder="due" />
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="text-center">
                         <div className="flex items-center">
                           <span className="px-2">$</span>
                           <Input
                             type="number"
                             step="0.01"
                             placeholder="0.00"
-                            className="flex-1"
+                            className="flex-1 text-center input-no-spinners"
                           />
                         </div>
                       </TableCell>
@@ -152,6 +181,23 @@ export default function Home() {
                       </TableRow>
                     ))}
                   </TableBody>
+                  <TableCaption>
+                    <Button
+                      onClick={() => {
+                        const new_invoice: InvoiceCreate = {
+                          origin_name: "amd",
+                          destination_name: "intel",
+                          due: "2025-08-17",
+                          issued: "2025-08-17",
+                          amount: 123.2,
+                        };
+                        console.log(new_invoice);
+                        postInvoice(new_invoice);
+                      }}
+                    >
+                      clickme
+                    </Button>
+                  </TableCaption>
                 </Table>
               </div>
             </div>
