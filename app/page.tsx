@@ -13,6 +13,7 @@ import axios from "axios";
 import { useRef, useState } from "react";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { Input } from "@/components/ui/input";
 
 interface Invoice {
   id: number;
@@ -88,6 +89,34 @@ export default function Home() {
                     </TableRow>
                   </TableHeader>
                   <TableBody>
+                    <TableRow>
+                      <TableCell>
+                        <Input type="number" placeholder="id" />
+                      </TableCell>
+                      <TableCell>
+                        <Input type="text" placeholder="origin" />
+                      </TableCell>
+                      <TableCell>
+                        <Input type="text" placeholder="destination" />
+                      </TableCell>
+                      <TableCell>
+                        <Input type="date" placeholder="issued" />
+                      </TableCell>
+                      <TableCell>
+                        <Input type="date" placeholder="due" />
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center">
+                          <span className="px-2">$</span>
+                          <Input
+                            type="number"
+                            step="0.01"
+                            placeholder="0.00"
+                            className="flex-1"
+                          />
+                        </div>
+                      </TableCell>
+                    </TableRow>
                     {invoices.map((invoice) => (
                       <TableRow
                         key={invoice.id}
