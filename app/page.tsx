@@ -32,7 +32,7 @@ interface InvoiceAPI { //this interface must match the json format that the api 
   destination: string;
   issued: string;
   due: string;
-  amount: number;
+  amount: string; //backend passes as a string so it must be string here too!
 }
 
 import { SETTINGS } from "@/lib/settings";
@@ -248,7 +248,7 @@ export default function Home() {
                           {invoice.due}
                         </TableCell>
                         <TableCell className="text-center">
-                          ${invoice.amount}
+                          ${parseFloat(invoice.amount).toFixed(2)}
                         </TableCell>
                       </TableRow>
                     ))}
