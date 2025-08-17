@@ -28,11 +28,7 @@ export default function Login() {
         password: password,
       })
       .then((res) => {
-        console.log(res.data.access_token);
-
-        //localStorage.setItem("token", res.data.access_token);
         authenticator?.setToken(res.data.access_token);
-        console.log("am i being pusshed here?")
         router.push(new URL("/", SETTINGS.HOST).toString());
       })
       .catch((e) => {
@@ -41,7 +37,6 @@ export default function Login() {
   };
 
   useEffect(() => {
-    console.log("i ran")
     const checkAuth = async () => {
       if (await authenticator?.isAuthed()){
         router.push(new URL("/",SETTINGS.HOST).toString())
@@ -49,7 +44,7 @@ export default function Login() {
     }
 
     checkAuth();
-  }, []);
+  });
 
   return (
     //TODO: make the login page in a form for password manager convinience
