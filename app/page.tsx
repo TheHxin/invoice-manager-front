@@ -73,7 +73,7 @@ export default function Home() {
     <div>
       <ContextMenu>
         <ContextMenuTrigger>
-          <div className="h-screen">
+          <div className="h-screen select-none">
             <div className="w-full max-w-5xl mx-auto p-4">
               <div className="overflow-x-auto rounded-md border">
                 <Table>
