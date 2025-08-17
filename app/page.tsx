@@ -103,26 +103,13 @@ export default function Home() {
     );
   };
 
-  function handleCreateInvoiceChange(update: Partial<InvoiceCreate> = {}) {
-    //note: instead of this we could use multiple useState for each of the properties but that would make it more verbose. however as react re-redners only hte changed components there is not a messurable diff between the two methods of impelimentation
-    const newInvoice: InvoiceCreate = {
-      origin_name:
-        update.origin_name === undefined
-          ? invoiceCreate.origin_name
-          : update.origin_name,
-      destination_name:
-        update.destination_name === undefined
-          ? invoiceCreate.destination_name
-          : update.destination_name,
-      issued:
-        update.issued === undefined ? invoiceCreate.issued : update.issued,
-      due: update.due === undefined ? invoiceCreate.due : update.due,
-      amount:
-        update.amount === undefined ? invoiceCreate.amount : update.amount,
-    };
+  function handleCreateInvoiceChange(update: Partial<InvoiceCreate> = {}) { //this function uses the ... spread oprator to first put the previous values thenoverride them with the given ones in the update partial.
+  setInvoiceCreate(prev => ({ //when instead of a value you pass a function to the setfunction of the useState hook react will call that function and pass the current values of the variable saved as a state
+    ...prev,   // first put the previous values
+    ...update, // then override only the ones in update
+  }));
+}
 
-    setInvoiceCreate(newInvoice);
-  }
 
   useEffect(() => {
     intervalRef.current = setInterval(fetchInvoices, 2000);
